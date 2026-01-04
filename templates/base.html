@@ -1,0 +1,62 @@
+<title>{% block title %}Siedmiodniowe cele{% endblock %}</title>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+
+.login-form {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 300px;
+}
+
+input[type="text"] {
+  border: 1px solid #C0C0C0;
+  padding: 20px;
+}
+
+input[type="password"] {
+  border: 1px solid #C0C0C0;
+  padding: 20px;
+}
+
+input,
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none; /* remove underline from anchors */
+}
+
+input:hover,
+.btn:hover {
+  opacity: 1;
+}
+</style>
+<div class="login-form">
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% block content %}{% endblock %}
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+</section>
+</div>
+

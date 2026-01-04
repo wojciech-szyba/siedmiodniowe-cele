@@ -1,0 +1,252 @@
+<html>
+<head>
+    <title>Tygodniowe cele do zrealizowania</title>
+    <style>
+        a {text-decoration: none;
+           background-color: none;
+           color: inherit;
+          }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;   /* makes all 7 columns share width */
+        }
+
+        th, td {
+            border: 2px dashed #eeeeee;
+            padding: 4px;
+            text-align: left;
+            overflow: hidden;
+            margin-left: 5px;
+        }
+
+        tr:first-child td {
+            vertical-align: top; /* aligns cell content at the top */
+            height: auto;
+        }
+
+        tr {
+            vertical-align: top; /* aligns cell content at the top */
+            height: auto;
+        }
+
+        thead {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        hr {
+          color: #eeeeee;
+        }
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            font-family: Arial, sans-serif;
+        }
+
+        .daily-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 5px;
+            font-family: Arial, sans-serif;
+        }
+
+        .week-grid div {
+            padding: 15px;
+            background: #e8f0fe;
+            border: 1px solid #90a4ae;
+            text-align: center;
+            font-weight: bold;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .daily-grid div {
+            padding: 15px;
+            background: #e8f0fe;
+            border: 1px solid #90a4ae;
+            text-align: center;
+            font-weight: bold;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .goals-cell {
+            opacity: 0.8;
+            display: grid;
+            gap: 5px;
+            font-family: Arial, sans-serif;
+            border: 2px solid black;
+            box-sizing: border-box;
+            outline: #4CAF50 solid 10px;
+            padding: 5px;
+            text-align: center;
+            margin-left: 1px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .goals-cell a {text-decoration: none;
+           background-color: none;
+           color: #0D693A;
+           font-size: 10px;
+           white-space: nowrap;
+          }
+
+        .name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .description {
+            font-size: 12px;
+            opacity: 0.9;
+             text-align: left;
+
+        }
+
+        .custom-row {
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .first-item {
+            order: 1;
+            margin-right: auto;
+        }
+
+        .second-item {
+            order: 3;
+            margin-left: auto;
+        }
+
+        .centered-item {
+            order: 2;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+    <script>
+        function set_achieved(divId) {
+            document.location.href = '/goal_achieved/' + divId;
+        }
+    </script>
+</head>
+<body>
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    <div class="row custom-row">
+        <div class="first-item">
+            {% if weekly == True %}
+                <a href="/daily">Widok na dzień</a>
+            {% elif weekly == False %}
+                <a href="/">Widok na tydzień</a>
+            {% endif %}
+        </div>
+        <div class="second-item"><a href="/logout">Wyloguj</a></div>
+        <div class="centered-item"><a href="/week_ago/{{ start_week }}"><<</a> {{ start_week }} - {{ end_week }} <a href="/next_week">>></a></div>
+    </div>
+    <hr>
+    <table>
+    <thead>
+      <tr>
+          {% if weekly == True %}
+            <div class="week-grid">
+                {% for day_of_week_id, day_of_week_label in days_of_week.items() %}
+                    <a href="/add_goal/{{ day_of_week_id }}"> <div> {{day_of_week_label}} </div></a>
+                {% endfor %}
+          {% elif weekly == False %}
+                <div class="daily-grid">
+                <a href="/add_goal/{{ today_day_of_week_number }}"> <div> {{days_of_week[today_day_of_week_number]}} </div></a>
+          {% endif %}
+        </div>
+      </tr>
+    </thead>
+    <tbody>
+        {% for goal in goals %}
+            {% if goal.goal_achieved == False %}
+                {% for i in range(1, 8) %}
+                    {% if i == 1 %}
+                        <tr>
+                    {% endif %}
+                    {% if weekly == False and today_day_of_week_number == 1 %}
+                        <td>
+                    {% elif weekly == True %}
+                        <td>
+                    {% endif %}
+                    {% if (goal.goal_day_of_week == i and weekly == True) or (goal.goal_day_of_week == today_day_of_week_number and weekly == False and i == 1) %}
+                        <div id="opened-{{ goal.id }}" class="goals-cell"
+                        {% if (today_day_of_week_number - goal.goal_day_of_week > 3) and goal.carried_over_if_not_achieved == True %}
+                            style="background-color: {{ task_colors_by_days[7 - i] }}; color: #FFFFFF;"
+                        {% elif (today_day_of_week_number - goal.goal_day_of_week <= 3) and goal.carried_over_if_not_achieved == True %}
+                            style="background-color: {{ task_colors_by_days[7 - i] }};"
+                        {% endif %}
+                        ondblclick="set_achieved({{ goal.id }})">
+                            <div class="name"> {{ goal.name }}
+                                {% if goal.carried_over_if_not_achieved == True %}
+                                <img src="{{ url_for('static', filename='icons/next.png') }}">
+                                {% endif %}
+                                {% if goal.goal_cyclic_weekly== True %}
+                                <img src="{{ url_for('static', filename='icons/recurring.ico') }}">
+                                {% endif %}
+                            </div>
+                            <div class="description">{{ goal.description }} </div>
+                            <div style="display: flex; align-items: center;"> <a href="/update_goal/{{ goal.id }}">Edytuj</a>&nbsp;|&nbsp;
+                                <a href="/delete_goal/{{ goal.id }}">Usuń</a></div></div>
+                       {% if weekly == False and today_day_of_week_number == i %}
+                         </td>
+                       {% elif weekly == True %}
+                         </td>
+                       {% endif %}
+                    {% endif %}
+                {% if i == 8 %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+           {% endif %}
+        {% endfor %}
+    </tbody>
+    </table>
+    <hr>
+    <table>
+        <thead>
+        </thead>
+        <tbody>
+        {% for goal in goals %}
+            {% if goal.goal_achieved == True %}
+                {% for i in range(1, 8) %}
+                    {% if i == 1 %}
+                        <tr>
+                    {% endif %}
+                    {% if weekly == False and today_day_of_week_number == 1 %}
+                        <td>
+                    {% elif weekly == True %}
+                        <td>
+                    {% endif %}
+                    {% if goal.goal_day_of_week== i %}
+                        <div id="completed-{{ goal.id }}" class="goals-cell" ondblclick="set_achieved({{ goal.id }})"><div class="name" style="text-decoration: line-through;"> {{ goal.name }} </div> <div class="description" style="text-decoration: line-through;">{{ goal.description }} </div></div>
+                    {% endif %}
+                    {% if weekly == False and today_day_of_week_number == 1 %}
+                       </td>
+                    {% elif weekly == True %}
+                       </td>
+                    {% endif %}
+                {% if i == 8 %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+           {% endif %}
+        {% endfor %}
+    </tbody>
+    </table>
+</body>
+</html>
+
