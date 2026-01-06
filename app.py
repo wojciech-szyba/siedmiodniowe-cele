@@ -47,7 +47,7 @@ def load_user(user_id):
 def main(week_start_date, week_end_date):
     print(f"current_user.is_authenticated: {current_user.is_authenticated}, user_id: {current_user.get_id()}")
     today = datetime.now()
-    today_day_of_week_number = today.weekday()
+    today_day_of_week_number = today.weekday() + 1
     current_week_start_date = today - timedelta(days=today.weekday()) if not week_start_date else week_start_date
     current_week_end_date = current_week_start_date + timedelta(days=6) if not week_end_date else week_end_date
     try:
@@ -86,7 +86,7 @@ def next_week_grid(week_start_date):
 
 @app.route('/daily', methods=['GET'])
 @login_required
-def daily():
+def daily_grid():
     today_day_of_week_number = datetime.now().weekday() + 1
     try:
         goals = db.session.execute(db.select(Goal)).scalars()
@@ -104,9 +104,12 @@ def daily():
 def insert_goal(day_of_week):
     if request.method == 'POST':
         is_goal_cyclic_weekly = True if request.form.get("goal_cyclic_weekly", 0) == "on" else False
+        is_goal_cyclic_daily = True if request.form.get("goal_cyclic_daily", 0) == "on" else False
         is_carried_over_if_not_achieved = True if request.form.get("carried_over_if_not_achieved", 0) == "on" else False
-        goal = Goal(name=request.form['name'], description=request.form['description'], goal_day_of_week=day_of_week,
+        goal = Goal(name=request.form['name'], description=request.form['description'],
+                    result=request.form['result'], goal_day_of_week=day_of_week,
                     goal_cyclic_weekly=is_goal_cyclic_weekly,
+                    goal_cyclic_daily=is_goal_cyclic_daily,
                     carried_over_if_not_achieved=is_carried_over_if_not_achieved)
         db.session.add(goal)
         db.session.commit()
@@ -122,7 +125,9 @@ def update(id):
     if request.method == 'POST':
         goal.name = request.form['name']
         goal.description = request.form['description']
+        goal.result = request.form['result']
         goal.goal_cyclic_weekly = True if request.form.get("goal_cyclic_weekly", False) == "on" else False
+        goal.goal_cyclic_weekly = True if request.form.get("goal_cyclic_daily", False) == "on" else False
         goal.carried_over_if_not_achieved = True if request.form.get("carried_over_if_not_achieved", False) == "on" \
             else False
         db.session.commit()

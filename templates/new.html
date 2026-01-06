@@ -1,41 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
- textarea {
-  width: 100%;
-  height: 150px;
-  padding: 12px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  background-color: #f8f8f8;
-  font-size: 16px;
-  resize: none;
-  margin: 10px 0;
-}
-
-input,
-.btn {
-  width: 100%;
-  padding: 12px;
-  border: 1px;
-  border-radius: 4px;
-  margin: 5px 0;
-  opacity: 0.85;
-  display: inline-block;
-  font-size: 17px;
-  line-height: 20px;
-  text-decoration: none; /* remove underline from anchors */
-}
-
-input:hover,
-.btn:hover {
-  opacity: 1;
-}
-
-</style>
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Nowy cel na {{ day_of_week }} </title>
 </head>
 <body>
@@ -44,6 +11,10 @@ input:hover,
      {% if goal is not none %}
         <textarea name="name" id="name">{{ goal.name }}</textarea>
         <textarea name="description" id="description">{{ goal.description }}</textarea>
+        <textarea name="result" id="result">{{ goal.result }}</textarea>
+        <br>
+        <input type="checkbox" id="goal_cyclic_daily" name="goal_cyclic_daily" {% if goal.goal_cyclic_daily %}checked{% endif %}>
+        <label for="goal_cyclic_daily">Czy cel występuje codziennie?</label>
         <br>
         <input type="checkbox" id="goal_cyclic_weekly" name="goal_cyclic_weekly" {% if goal.goal_cyclic_weekly %}checked{% endif %}>
         <label for="goal_cyclic_weekly">Czy cel występuje co tydzień?</label>
@@ -52,7 +23,11 @@ input:hover,
         <label for="carried_over_if_not_achieved">Czy niezrealizowane cele przechodzą na kolejne dni?</label>
      {% else %}
         <textarea name="name" id="name_new">{{ request.form['name'] }}</textarea>
-        <textarea name="description" id="description_new" placeholder="Tip: Zdefiniuj cel posiadający jasno określony i mierzalny rezultat aby ułatwić weryfikacje jego realizacji">{{ request.form['description'] }}</textarea>
+        <textarea name="description" id="description_new" placeholder="Tip: Opisz dokładnie cel">{{ request.form['description'] }}</textarea>
+        <textarea name="result" id="result_new" placeholder="Tip: Zdefiniuj cel posiadający jasno określony i mierzalny rezultat aby ułatwić weryfikacje jego realizacji">{{ request.form['description'] }}</textarea>
+        <br>
+        <input type="checkbox" id="goal_cyclic_daily_new" name="goal_cyclic_daily">
+        <label for="goal_cyclic_weekly">Czy cel występuje codziennie?</label>
         <br>
         <input type="checkbox" id="goal_cyclic_weekly_new" name="goal_cyclic_weekly">
         <label for="goal_cyclic_weekly">Czy cel występuje co tydzień?</label>
@@ -64,4 +39,3 @@ input:hover,
     <input type="submit" value="Zapisz">
  </form>
 </body>
-
