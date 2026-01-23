@@ -48,16 +48,19 @@ def main(week_start_date, week_end_date):
     print(f"current_user.is_authenticated: {current_user.is_authenticated}, user_id: {current_user.get_id()}")
     today = datetime.now()
     today_day_of_week_number = today.weekday() + 1
-    current_week_start_date = today - timedelta(days=today.weekday()) if not week_start_date else week_start_date
-    current_week_end_date = current_week_start_date + timedelta(days=6) if not week_end_date else week_end_date
+    current_week_start_date = today - timedelta(days=today.weekday()) if not week_start_date else datetime.strptime(week_start_date, "%Y-%m-%d")
+    current_week_end_date = current_week_start_date + timedelta(days=6) if not week_end_date else datetime.strptime(week_end_date, "%Y-%m-%d")
     try:
         goals = db.session.execute(db.select(Goal).where(Goal.name == Goal.name)).scalars()
         goals = goals.all()
         for goal in goals:
+            goal_dt = goal.goal_datetime
+            if not (goal_dt >= current_week_start_date and goal_dt <= current_week_end_date):
+                goals.remove(goal)
             if goal.goal_deadline_date:
                 if goal.goal_deadline_date < datetime.now():
-                    if goal.carried_over_if_not_achieved:
-                        ...
+                    if not goal.carried_over_if_not_achieved:
+                        goals.remove(goal)
     except Exception as e:
         print(str(e))
         goals = []
@@ -71,8 +74,9 @@ def main(week_start_date, week_end_date):
 @login_required
 def week_ago_grid(week_start_date):
     week_ago = datetime.strptime(week_start_date, "%Y-%m-%d") - timedelta(days=7)
-
-    return render_template('index.html', week_start_date=week_ago, week_end_date=week_start_date)
+    end_date = datetime.strptime(week_start_date, "%Y-%m-%d") - timedelta(days=1)
+    return redirect(url_for('main', week_start_date=week_ago.strftime('%Y-%m-%d'),
+                            week_end_date=end_date.strftime('%Y-%m-%d')))
 
 
 @app.route('/next_week/<week_start_date>', methods=['GET'])
@@ -80,8 +84,8 @@ def week_ago_grid(week_start_date):
 def next_week_grid(week_start_date):
     next_week = datetime.strptime(week_start_date, "%Y-%m-%d") + timedelta(days=7)
     next_week_end = datetime.strptime(week_start_date, "%Y-%m-%d") + timedelta(days=14)
-
-    return render_template('index.html', week_start_date=next_week, week_end_date=next_week_end)
+    return redirect(url_for('main', week_start_date=next_week.strftime('%Y-%m-%d'),
+                            week_end_date=next_week_end.strftime('%Y-%m-%d')))
 
 
 @app.route('/daily', methods=['GET'])
