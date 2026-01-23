@@ -175,12 +175,6 @@ def login():
             if form.email.data != 'test@test.pl':
                 flash('User does not exists!')
                 return render_template('login.html', form=form)
-            else:
-                #Test purpose/Temporary
-                user = User(username='test', email='test@test.pl')
-                user.set_password('abc')
-                db.session.add(user)
-                db.session.commit()
         if user.check_password(form.password.data):
             is_success = login_user(user, remember=form.remember_me.data)
             if is_success:
