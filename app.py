@@ -110,13 +110,16 @@ def insert_goal(day_of_week):
         is_goal_cyclic_weekly = True if request.form.get("goal_cyclic_weekly", 0) == "on" else False
         is_goal_cyclic_daily = True if request.form.get("goal_cyclic_daily", 0) == "on" else False
         is_carried_over_if_not_achieved = True if request.form.get("carried_over_if_not_achieved", 0) == "on" else False
-        goal = Goal(name=request.form['name'], description=request.form['description'],
-                    result=request.form['result'], goal_day_of_week=day_of_week,
-                    goal_cyclic_weekly=is_goal_cyclic_weekly,
-                    goal_cyclic_daily=is_goal_cyclic_daily,
-                    carried_over_if_not_achieved=is_carried_over_if_not_achieved)
-        db.session.add(goal)
-        db.session.commit()
+        last_day_goal_present = day_of_week if not is_goal_cyclic_daily else 7
+        for day in range(day_of_week, last_day_goal_present + 1):
+            goal = Goal(name=request.form['name'], description=request.form['description'],
+                        result=request.form['result'], goal_day_of_week=day,
+                        goal_cyclic_weekly=is_goal_cyclic_weekly,
+                        goal_cyclic_daily=is_goal_cyclic_daily,
+                        carried_over_if_not_achieved=is_carried_over_if_not_achieved)
+            db.session.add(goal)
+            db.session.commit()
+
         return redirect(url_for('main'))
     else:
         return render_template('new.html', day_of_week=day_of_week, goal=None)
