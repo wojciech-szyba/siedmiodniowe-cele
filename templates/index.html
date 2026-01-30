@@ -30,7 +30,11 @@
           {% if weekly == True %}
             <div class="week-grid">
                 {% for day_of_week_id, day_of_week_label in days_of_week.items() %}
-                    <a href="/add_goal/{{ day_of_week_id }}"> <div> {{day_of_week_label}} </div></a>
+                {% if day_of_week_id == today_day_of_week_number %}
+                    <a href="/add_goal/{{ day_of_week_id }}"> <div> {{day_of_week_label}} <br><hr></div></a>
+                {% else %}
+                    <a href="/add_goal/{{ day_of_week_id }}"> <div> {{day_of_week_label}}</div></a>
+                {% endif %}
                 {% endfor %}
           {% elif weekly == False %}
                 <div class="daily-grid">
@@ -54,11 +58,7 @@
                     {% if (goal.goal_day_of_week == i and weekly == True) or (goal.goal_day_of_week == today_day_of_week_number and weekly == False and i == 1) %}
                         <div id="opened-{{ goal.id }}" class="goals-cell"
                         {% if (today_day_of_week_number - goal.goal_day_of_week > 0) and goal.carried_over_if_not_achieved == True %}
-                            {% if (today_day_of_week_number - goal.goal_day_of_week > 3) and goal.carried_over_if_not_achieved == True %}
-                                style="background-color: {{ task_colors_by_days[today_day_of_week_number - goal.goal_day_of_week] }}; color: #FFFFFF;"
-                            {% elif (today_day_of_week_number - goal.goal_day_of_week <= 3) and goal.carried_over_if_not_achieved == True %}
-                                style="background-color: {{ task_colors_by_days[today_day_of_week_number - goal.goal_day_of_week] }};"
-                            {% endif %}
+                            style="background: linear-gradient(90deg, {{ task_colors_by_days[today_day_of_week_number - goal.goal_day_of_week]['background'] }} ); color: {{ task_colors_by_days[today_day_of_week_number - goal.goal_day_of_week]['font_color'] }};"
                         {% else %}
                             style="background-color: #FFFFFF;"
                         {% endif %}

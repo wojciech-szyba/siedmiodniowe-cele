@@ -6,12 +6,12 @@ from werkzeug.security import check_password_hash, generate_password_hash
 DAYS_OF_WEEK = {1: 'Poniedziałek', 2: 'Wtorek', 3: 'Środa', 4: 'Czwartek', 5: 'Piątek', 6: 'Sobota', 7: 'Niedziela'}
 
 TASK_COLORS_BY_DAYS = {
-    1: '#FFFFFF',
-    2: '#FBEDEA',
-    3: '#DA6B52',
-    4: '#AD3E25',
-    5: '#e10000',
-    6: '#3B150C'
+    1: {'background': '#fcece9 0%, #cbe2f7 100%', 'font_color': '#000000'},
+    2: {'background': '#f9e5e1 0%, #fcece9 100%', 'font_color': '#000000'},
+    3: {'background': '#f5a898 0%, #f9e5e1 100%', 'font_color': '#000000'},
+    4: {'background': '#ea8367 0%, #f5a898 100%', 'font_color': '#000000'},
+    5: {'background': '#ff0000 0%, #ea8367 100%', 'font_color': '#FFFFFF'},
+    6: {'background': '#3B150C 0%, #ff0000 100%', 'font_color': '#FFFFFF'},
 }
 
 db = SQLAlchemy()
