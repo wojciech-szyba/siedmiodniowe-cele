@@ -11,7 +11,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_required, LoginManager, login_user, logout_user, current_user
 from .models import Goal, User, db, DAYS_OF_WEEK, TASK_COLORS_BY_DAYS
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from .login import LoginForm
 
 app = Flask(__name__)
@@ -55,8 +55,13 @@ def main(week_start_date, week_end_date):
         goals = goals.all()
         for goal in goals:
             goal_dt = goal.goal_datetime
-            if not (goal_dt >= current_week_start_date and goal_dt <= current_week_end_date):
-                goals.remove(goal)
+            if not (current_week_start_date <= goal_dt <= current_week_end_date):
+                if goal.goal_achieved:
+                    goals.remove(goal)
+                elif not goal.carried_over_if_not_achieved:
+                    goals.remove(goal)
+                elif goal.goal_one_day_only:
+                    goals.remove(goal)
             if goal.goal_deadline_date:
                 if goal.goal_deadline_date < datetime.now():
                     if not goal.carried_over_if_not_achieved:
@@ -91,16 +96,28 @@ def next_week_grid(week_start_date):
 @app.route('/daily', methods=['GET'])
 @login_required
 def daily_grid():
-    today_day_of_week_number = datetime.now().weekday() + 1
+    today = date.today()
+    current_week_start_date = today - timedelta(days=today.weekday())
+    current_week_end_date = current_week_start_date + timedelta(days=6)
+    today_day_of_week_number = today.weekday() + 1
     try:
-        goals = db.session.execute(db.select(Goal)).scalars()
+        goals = db.session.execute(db.select(Goal).where(db.or_(db.func.date(Goal.goal_datetime) == today,
+                                                                db.and_(
+                                                                     db.func.date(Goal.goal_datetime) < today,
+                                                                     Goal.goal_achieved.is_(False),
+                                                                     Goal.carried_over_if_not_achieved.is_(True)
+                                                                    )
+                                                                )
+                                                         )
+                                   ).scalars()
         goals = goals.all()
     except Exception as e:
         print(str(e))
         goals = []
     return render_template('index.html', days_of_week=DAYS_OF_WEEK, goals=goals,
                            task_colors_by_days=TASK_COLORS_BY_DAYS, today_day_of_week_number=today_day_of_week_number,
-                           weekly=False)
+                           weekly=False, start_week=current_week_start_date.strftime('%Y-%m-%d'),
+                           end_week=current_week_end_date.strftime('%Y-%m-%d'))
 
 
 @app.route('/add_goal/<int:day_of_week>/', methods=['GET', 'POST'])
