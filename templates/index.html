@@ -2,11 +2,7 @@
 <head>
     <title>Tygodniowe cele do zrealizowania</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script>
-        function set_achieved(divId) {
-            document.location.href = '/goal_achieved/' + divId;
-        }
-    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </head>
 <body>
     {% for message in get_flashed_messages() %}
@@ -21,7 +17,9 @@
             {% endif %}
         </div>
         <div class="second-item"><a href="/logout">Wyloguj</a></div>
-        <div class="centered-item"><a href="/week_ago/{{ start_week }}"><<</a> {{ start_week }} - {{ end_week }} <a href="/next_week/{{ start_week }}">>></a></div>
+        {% if weekly == True %}
+            <div class="centered-item"><a href="/week_ago/{{ start_week }}"><<</a> {{ start_week }} - {{ end_week }} <a href="/next_week/{{ start_week }}">>></a></div>
+        {% endif %}
     </div>
     <hr>
     <table>
@@ -55,7 +53,7 @@
                     {% elif weekly == True %}
                         <td>
                     {% endif %}
-                    {% if (goal.goal_day_of_week == i and weekly == True) or (goal.goal_day_of_week == today_day_of_week_number and weekly == False and i == 1) %}
+                    {% if (goal.goal_day_of_week == i and weekly == True) or (weekly == False and i==1) %}
                         <div id="opened-{{ goal.id }}" class="goals-cell"
                         {% if (today_day_of_week_number - goal.goal_day_of_week > 0) and goal.carried_over_if_not_achieved == True %}
                             style="background: linear-gradient(90deg, {{ task_colors_by_days[today_day_of_week_number - goal.goal_day_of_week]['background'] }} ); color: {{ task_colors_by_days[today_day_of_week_number - goal.goal_day_of_week]['font_color'] }};"
@@ -127,5 +125,10 @@
         {% endfor %}
     </tbody>
     </table>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            moveUpNonEmptyCells();  // Your table fix function
+        });
+    </script>
 </body>
 </html>
