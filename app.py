@@ -66,13 +66,15 @@ def main(week_start_date, week_end_date):
                 if goal.goal_deadline_date < datetime.now():
                     if not goal.carried_over_if_not_achieved:
                         goals.remove(goal)
+        is_this_current_week = 1 if current_week_start_date <= today <= current_week_end_date else 0
     except Exception as e:
+        is_this_current_week = 1
         print(str(e))
         goals = []
     return render_template('index.html', days_of_week=DAYS_OF_WEEK, goals=goals,
                            task_colors_by_days=TASK_COLORS_BY_DAYS, today_day_of_week_number=today_day_of_week_number,
                            weekly=True, start_week=current_week_start_date.strftime('%Y-%m-%d'),
-                           end_week=current_week_end_date.strftime('%Y-%m-%d'))
+                           end_week=current_week_end_date.strftime('%Y-%m-%d'), is_this_current_week=is_this_current_week)
 
 
 @app.route('/week_ago/<week_start_date>', methods=['GET'])
@@ -120,10 +122,11 @@ def daily_grid():
                            end_week=current_week_end_date.strftime('%Y-%m-%d'))
 
 
-@app.route('/add_goal/<int:day_of_week>/', methods=['GET', 'POST'])
+@app.route('/add_goal/<week_start_date>/<int:day_of_week>/', methods=['GET', 'POST'])
 @login_required
-def insert_goal(day_of_week):
+def insert_goal(week_start_date, day_of_week):
     if request.method == 'POST':
+        goal_datetime = datetime.strptime(week_start_date, "%Y-%m-%d") + timedelta(days=day_of_week)
         is_goal_cyclic_weekly = True if request.form.get("goal_cyclic_weekly", 0) == "on" else False
         is_goal_cyclic_daily = True if request.form.get("goal_cyclic_daily", 0) == "on" else False
         is_carried_over_if_not_achieved = True if request.form.get("carried_over_if_not_achieved", 0) == "on" else False
@@ -133,6 +136,7 @@ def insert_goal(day_of_week):
                         result=request.form['result'], goal_day_of_week=day,
                         goal_cyclic_weekly=is_goal_cyclic_weekly,
                         goal_cyclic_daily=is_goal_cyclic_daily,
+                        goal_datetime=goal_datetime,
                         carried_over_if_not_achieved=is_carried_over_if_not_achieved)
             db.session.add(goal)
             db.session.commit()

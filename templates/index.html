@@ -28,15 +28,15 @@
           {% if weekly == True %}
             <div class="week-grid">
                 {% for day_of_week_id, day_of_week_label in days_of_week.items() %}
-                {% if day_of_week_id == today_day_of_week_number %}
-                    <a href="/add_goal/{{ day_of_week_id }}"> <div> {{day_of_week_label}} <br><hr></div></a>
+                {% if day_of_week_id == today_day_of_week_number and is_this_current_week == 1 %}
+                    <a href="/add_goal/{{ start_week }}/{{ day_of_week_id }}"> <div> {{day_of_week_label}} <br><hr></div></a>
                 {% else %}
-                    <a href="/add_goal/{{ day_of_week_id }}"> <div> {{day_of_week_label}}</div></a>
+                    <a href="/add_goal/{{ start_week }}/{{ day_of_week_id }}"> <div> {{day_of_week_label}}</div></a>
                 {% endif %}
                 {% endfor %}
           {% elif weekly == False %}
                 <div class="daily-grid">
-                <a href="/add_goal/{{ today_day_of_week_number }}"> <div> {{days_of_week[today_day_of_week_number]}} </div></a>
+                <a href="/add_goal/{{ start_week }}/{{ today_day_of_week_number }}"> <div> {{days_of_week[today_day_of_week_number]}} </div></a>
           {% endif %}
         </div>
       </tr>
