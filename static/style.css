@@ -169,3 +169,20 @@ input:hover,
 .btn:hover {
   opacity: 1;
 }
+
+@media (max-width: 768px) {
+    html {
+        font-size: 18px;  /* BIGGER on mobile */
+    }
+
+    body {
+        padding: 10px;
+        line-height: 1.6;  /* More readable */
+    }
+
+    /* Stack everything vertically */
+    .container, .card {
+        max-width: 100%;
+        margin: 0 auto 20px;
+    }
+}
