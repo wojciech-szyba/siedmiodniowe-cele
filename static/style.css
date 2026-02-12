@@ -3,140 +3,140 @@
            color: inherit;
           }
 
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;   /* makes all 7 columns share width */
-        }
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;   /* makes all 7 columns share width */
+}
 
-        th, td {
-            border: 2px dashed #eeeeee;
-            padding: 4px;
-            text-align: left;
-            overflow: hidden;
-            margin-left: 5px;
-        }
+th, td {
+    border: 2px dashed #eeeeee;
+    padding: 4px;
+    text-align: left;
+    overflow: hidden;
+    margin-left: 5px;
+}
 
-        tr:first-child td {
-            vertical-align: top; /* aligns cell content at the top */
-            height: auto;
-        }
+tr:first-child td {
+    vertical-align: top; /* aligns cell content at the top */
+    height: auto;
+}
 
-        tr {
-            vertical-align: top; /* aligns cell content at the top */
-            height: auto;
-        }
+tr {
+    vertical-align: top; /* aligns cell content at the top */
+    height: auto;
+}
 
-        thead {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
+thead {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
 
-        tbody tr:nth-child(even) {
-            background-color: #fafafa;
-        }
+tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
 
-        hr {
-          color: #eeeeee;
-        }
-        .week-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            font-family: Arial, sans-serif;
-        }
+hr {
+  color: #eeeeee;
+}
+.week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    font-family: Arial, sans-serif;
+}
 
-        .daily-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 5px;
-            font-family: Arial, sans-serif;
-        }
+.daily-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+    font-family: Arial, sans-serif;
+}
 
-        .week-grid div {
-            padding: 15px;
-            background: #e8f0fe;
-            border: 1px solid #90a4ae;
-            text-align: center;
-            font-weight: bold;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+.week-grid div {
+    padding: 15px;
+    background: #e8f0fe;
+    border: 1px solid #90a4ae;
+    text-align: center;
+    font-weight: bold;
+    padding: 20px;
+    margin-bottom: 20px;
+}
 
-        .daily-grid div {
-            padding: 15px;
-            max-width: 470px;
-            background: #e8f0fe;
-            border: 1px solid #90a4ae;
-            text-align: center;
-            font-weight: bold;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+.daily-grid div {
+    padding: 15px;
+    max-width: 470px;
+    background: #e8f0fe;
+    border: 1px solid #90a4ae;
+    text-align: center;
+    font-weight: bold;
+    padding: 20px;
+    margin-bottom: 20px;
+}
 
-        .goals-cell {
-            opacity: 0.8;
-            display: grid;
-            gap: 5px;
-            font-family: Arial, sans-serif;
-            border: 2px solid black;
-            box-sizing: border-box;
-            outline: #4CAF50 solid 5px;
-            padding: 5px;
-            text-align: center;
-            margin-left: 1px;
-            margin-bottom: 20px;
-            margin-top: 20px;
-            max-width: 500px;
-        }
+.goals-cell {
+    opacity: 0.8;
+    display: grid;
+    gap: 5px;
+    font-family: Arial, sans-serif;
+    border: 2px solid black;
+    box-sizing: border-box;
+    outline: #4CAF50 solid 5px;
+    padding: 5px;
+    text-align: center;
+    margin-left: 1px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    max-width: 500px;
+}
 
-        .goals-cell a {text-decoration: none;
-           background-color: none;
-           color: #0D693A;
-           font-size: 10px;
-           white-space: nowrap;
-          }
+.goals-cell a {text-decoration: none;
+   background-color: none;
+   color: #0D693A;
+   font-size: 10px;
+   white-space: nowrap;
+  }
 
-        .name {
-            font-size: 16px;
-            font-weight: bold;
-        }
+.name {
+    font-size: 16px;
+    font-weight: bold;
+}
 
-        .description {
-            font-size: 11px;
-            opacity: 0.7;
-             text-align: left;
+.description {
+    font-size: 11px;
+    opacity: 0.7;
+     text-align: left;
 
-        }
+}
 
-        .result {
-            font-size: 12px;
-            opacity: 0.9;
-             text-align: left;
+.result {
+    font-size: 12px;
+    opacity: 0.9;
+     text-align: left;
 
-        }
+}
 
-        .custom-row {
-            display: flex !important;
-            justify-content: space-between;
-            align-items: center;
-        }
+.custom-row {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .first-item {
-            order: 1;
-            margin-right: auto;
-        }
+.first-item {
+    order: 1;
+    margin-right: auto;
+}
 
-        .second-item {
-            order: 3;
-            margin-left: auto;
-        }
+.second-item {
+    order: 3;
+    margin-left: auto;
+}
 
-        .centered-item {
-            order: 2;
-            margin-left: auto;
-            margin-right: auto;
-        }
+.centered-item {
+    order: 2;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 textarea {
   width: 100%;
@@ -157,6 +157,8 @@ input,
   padding: 12px;
   border: 1px;
   border-radius: 4px;
+  background-color: #007bff;
+  border-color: #007bff;
   margin: 5px 0;
   opacity: 0.85;
   display: inline-block;
@@ -168,6 +170,19 @@ input,
 input:hover,
 .btn:hover {
   opacity: 1;
+}
+
+.btn-login {
+    background: #e8f0fe;
+    opacity: 0.5;
+    border-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.btn-login:hover {
+    opacity: 0.8;  /* Prefer over 0.5 to avoid full fade */
+    background: #e8f0fe;
 }
 
 @media (max-width: 768px) {
