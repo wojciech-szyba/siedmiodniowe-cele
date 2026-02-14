@@ -138,7 +138,8 @@ def create_app():
 
             return redirect(url_for('main'))
         else:
-            return render_template('new.html', day_of_week=day_of_week, goal=None)
+            return render_template('new.html', op='add_goal', week_start_date=week_start_date,
+                                   day_of_week=day_of_week, goal=None)
 
     @app.route('/update_goal/<int:id>', methods=['GET', 'POST'])
     @login_required
@@ -156,7 +157,7 @@ def create_app():
             return redirect(url_for('main'))
         else:
             goal = db.get_or_404(Goal, id)
-            return render_template('new.html', day_of_week=goal.goal_day_of_week, goal=goal)
+            return render_template('new.html', op='update_goal', day_of_week=goal.goal_day_of_week, goal=goal)
 
     @app.route('/delete_goal/<int:id>', methods=['GET', 'POST'])
     @login_required

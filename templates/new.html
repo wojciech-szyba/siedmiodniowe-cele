@@ -6,7 +6,11 @@
     <title>Nowy cel na {{ day_of_week }} </title>
 </head>
 <body>
- <form method="post">
+    {% if op == 'add_goal' %}
+    <form method="post" action="/{{ op }}/{{ week_start_date }}/{{ day_of_week }}">
+    {% else %}
+    <form method="post" action="/{{ op }}/{{ goal.id }}">
+    {% endif %}
      <b><label for="content">Nazwa i opis celu:&nbsp;</label></b>
      {% if goal is not none %}
         <textarea name="name" id="name">{{ goal.name }}</textarea>

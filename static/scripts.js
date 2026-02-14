@@ -1,6 +1,7 @@
 function set_achieved(divId) {
     document.location.href = '/goal_achieved/' + divId;
 }
+
 function moveUpNonEmptyCells() {
     const table = document.querySelectorAll('tbody');
 
@@ -28,4 +29,31 @@ function moveUpNonEmptyCells() {
         })
         }
     }
+}
+
+function openGoalModal(op, startWeek, dayId, goalId) {
+    if (op == "add_goal") {
+        fetch(`/add_goal/${startWeek}/${dayId}`, {
+                method: 'GET'
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('modal-body').innerHTML = html;
+                document.getElementById('goal-modal').style.display = 'block';
+            });
+    }
+    else if (op == "update_goal")  {
+        fetch(`/update_goal/${goalId}`, {  // ← Fixed
+                method: 'GET'
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('modal-body').innerHTML = html;
+                document.getElementById('goal-modal').style.display = 'block';
+            });
+    }
+}
+
+function closeModal() {
+    document.getElementById('goal-modal').style.display = 'none';
 }
