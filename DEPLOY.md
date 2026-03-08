@@ -35,4 +35,4 @@ chmod 700 /var/www/siedmiodniowe-cele//venv
 
 ## Service setup (gunicorn)
 nano /etc/systemd/system/siedmiodniowe.service \
-sudo systemctl daemon-reload && sudo systemctl restart wall-stash
+sudo systemctl daemon-reload && sudo systemctl restart siedmiodniowe
