@@ -26,7 +26,7 @@ pip install --upgrade pip \
 pip install -r requirements.txt
 
 ### Test
-gunicorn --bind 0.0.0.0:<port> "siedmiodniowe_cele.app:create_app()
+gunicorn --bind 0.0.0.0:{port} "siedmiodniowe_cele.app:create_app()
 
 ## User settings
 sudo chown -R webapp:www-data /var/www/siedmiodniowe-cele/ \
