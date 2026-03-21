@@ -6,3 +6,4 @@ wtforms
 werkzeug
 gunicorn
 email_validator
+pytest
